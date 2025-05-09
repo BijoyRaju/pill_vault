@@ -16,10 +16,7 @@ class MedicineCard extends StatelessWidget {
       height: 110,
       width: 140,
       decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(imagePath),
-          fit: BoxFit.cover,
-        ),
+        image: DecorationImage(image: AssetImage(imagePath), fit: BoxFit.cover),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Stack(

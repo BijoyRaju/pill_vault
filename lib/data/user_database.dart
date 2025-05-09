@@ -20,6 +20,6 @@ class UserDatabase extends HiveObject {
     required this.fullName,
     required this.email,
     required this.phoneNumber,
-    required this.password
+    required this.password,
 });
 }

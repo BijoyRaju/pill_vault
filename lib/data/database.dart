@@ -18,17 +18,17 @@ class Database extends HiveObject {
   int price;
 
   @HiveField(4)
-  String description;
+  String? description;
 
   @HiveField(5)
-  Uint8List? photo; 
+  Uint8List? imagePath; 
 
   Database({
     required this.medicineName,
     required this.chemicalName,
     required this.dosage,
     required this.price,
-    required this.description,
-    this.photo,
+    this.description,
+    this.imagePath,
   });
 }

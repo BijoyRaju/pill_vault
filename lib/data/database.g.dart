@@ -21,8 +21,8 @@ class DatabaseAdapter extends TypeAdapter<Database> {
       chemicalName: fields[1] as String,
       dosage: fields[2] as int,
       price: fields[3] as int,
-      description: fields[4] as String,
-      photo: fields[5] as Uint8List?,
+      description: fields[4] as String?,
+      imagePath: fields[5] as Uint8List?,
     );
   }
 
@@ -41,7 +41,7 @@ class DatabaseAdapter extends TypeAdapter<Database> {
       ..writeByte(4)
       ..write(obj.description)
       ..writeByte(5)
-      ..write(obj.photo);
+      ..write(obj.imagePath);
   }
 
   @override

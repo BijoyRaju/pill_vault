@@ -46,7 +46,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   child: Image.asset(ImageConstants.splashScreenImg),
                 ),
                 const SizedBox(height: 20),
-                Image.asset(ImageConstants.registrationPageImg),
+                Image.asset(ImageConstants.pillVault),
               ],
             ),
           ),

@@ -5,7 +5,6 @@ import 'package:pill_vault/views/login/login_page.dart';
 import 'package:pill_vault/widgets/button.dart';
 import 'package:pill_vault/widgets/text_field.dart';
 import 'package:pill_vault/constants/image_constants.dart';
-import 'package:pill_vault/views/bottom_navigations.dart';
 import 'package:hive/hive.dart';
 
 
@@ -24,8 +23,7 @@ class _RegistorPageState extends State<RegistorPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      body: ListView(
         children: [
 
           // Registration Page Image 

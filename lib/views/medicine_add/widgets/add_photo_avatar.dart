@@ -28,7 +28,10 @@ class AddPhotoAvatar extends StatelessWidget {
                 ? Text(
                   label,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 16, color: Colors.black87),
+                  style: const TextStyle(
+                    fontSize: 16, color: Color.fromARGB(255, 98, 98, 98),
+                    fontStyle: FontStyle.italic
+                    ),
                 )
                 : null,
       ),

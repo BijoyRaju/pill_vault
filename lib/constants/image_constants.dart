@@ -11,4 +11,5 @@ class ImageConstants {
     static const String google = 'asset/image/google.png';
     static const String apple = 'asset/image/apple.png';
     static const String pillVault = 'asset/image/PillVault.png';
+    static const String profilePhoto = 'asset/image/profile_photo.jpg';
 }

@@ -3,7 +3,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:hive/hive.dart';
 import 'package:flutter/material.dart';
 import 'package:pill_vault/data/database.dart';
-import 'package:pill_vault/views/bottom_navigations.dart';
+import 'package:pill_vault/views/bottom_navigations/bottom_navigations.dart';
 import 'package:pill_vault/widgets/button.dart';
 import 'package:pill_vault/widgets/text_field.dart';
 import 'package:pill_vault/constants/text_constants.dart';
@@ -26,6 +26,7 @@ class _AddPageState extends State<AddPage> {
   final priceController = TextEditingController();
   final descController = TextEditingController();
   Uint8List? _pickedImage;
+  bool _isFavorite = false;
 
   @override
   void initState() {
@@ -37,6 +38,7 @@ class _AddPageState extends State<AddPage> {
       priceController.text = widget.medicine!.price.toString();
       descController.text = widget.medicine!.description ?? '';
       _pickedImage = widget.medicine!.imagePath;
+      _isFavorite = widget.medicine!.isFavorite ?? false;
     }
   }
 
@@ -84,6 +86,7 @@ class _AddPageState extends State<AddPage> {
       price: int.tryParse(priceController.text) ?? 0,
       description: descController.text,
       imagePath: _pickedImage,
+      isFavorite: _isFavorite
     );
 
     final box = await Hive.openBox<Database>('mybox');
@@ -134,6 +137,17 @@ class _AddPageState extends State<AddPage> {
               isEdit
                   ? [
                     IconButton(
+                      icon: Icon(
+                        _isFavorite ? Icons.favorite : Icons.favorite_border,
+                        color: _isFavorite ? Colors.red : Colors.grey,
+                      ),
+                      onPressed: (){
+                        setState(() {
+                          _isFavorite = !_isFavorite;
+                        });
+                      },
+                    ),
+                    IconButton(
                       icon: const Icon(Icons.delete, color: Colors.red),
                       onPressed: () async {
                         // Confirm delete
@@ -149,7 +163,7 @@ class _AddPageState extends State<AddPage> {
                                     onPressed:
                                         () => Navigator.pop(context, false),
                                   ),
-                                  TextButton(
+                                TextButton(
                                     onPressed:
                                         () => Navigator.pop(context, true),
                                     child: const Text(

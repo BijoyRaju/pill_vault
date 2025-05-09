@@ -23,13 +23,14 @@ class DatabaseAdapter extends TypeAdapter<Database> {
       price: fields[3] as int,
       description: fields[4] as String?,
       imagePath: fields[5] as Uint8List?,
+      isFavorite: fields[6] as bool?,
     );
   }
 
   @override
   void write(BinaryWriter writer, Database obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.medicineName)
       ..writeByte(1)
@@ -41,7 +42,9 @@ class DatabaseAdapter extends TypeAdapter<Database> {
       ..writeByte(4)
       ..write(obj.description)
       ..writeByte(5)
-      ..write(obj.imagePath);
+      ..write(obj.imagePath)
+      ..writeByte(6)
+      ..write(obj.isFavorite);
   }
 
   @override

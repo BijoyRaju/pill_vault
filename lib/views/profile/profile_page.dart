@@ -1,66 +1,171 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:pill_vault/constants/image_constants.dart';
+import 'package:pill_vault/constants/text_constants.dart';
+import 'package:pill_vault/views/login/login_page.dart';
+import 'package:pill_vault/views/profile/widgets/edit_show_dialog.dart';
+import 'package:pill_vault/widgets/button.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:pill_vault/data/user_database.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+   const ProfilePage({
+    super.key,
+    });
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+
+  late TextEditingController _nameController = TextEditingController();
+  late TextEditingController _emailController = TextEditingController();
+  late TextEditingController _phoneNumberController = TextEditingController();
+  UserDatabase? user;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUser();
+  }
+
+  Future<void> _loadUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    final key = prefs.getInt('loggedInUserKey');
+    if (key != null) {
+      final box = Hive.box<UserDatabase>('users');
+      final loadedUser = box.get(key);
+      if (loadedUser != null) {
+        setState(() {
+          user = loadedUser;
+          _nameController.text = loadedUser.fullName;
+          _emailController.text = loadedUser.email;
+          _phoneNumberController.text = loadedUser.phoneNumber;
+        });
+      }
+    }
+  }
+
+  Future<void> signOut(BuildContext ctx) async {
+    final _sharedPrefs = await SharedPreferences.getInstance();
+    await _sharedPrefs.clear();
+    Navigator.of(ctx).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (ctx) => const LoginPage()),
+      (route) => false,
+    );
+  }
+
+  // Edit Profile
+  void showEditDialog(){
+    showDialog(context: context,
+    builder: (context){
+      return EditShowDialog(
+        onCancel: (){
+          Navigator.pop(context);
+        },
+        onUpdate: onUpdate,
+        nameController: _nameController,
+        emailController: _emailController,
+        phoneController: _phoneNumberController);
+    }
+    );
+  }
+
+  void onUpdate(){
+    final updatedUser = user!..fullName = _nameController.text
+                            ..email = _emailController.text
+                            ..phoneNumber = _phoneNumberController.text;
+    
+    final box = Hive.box<UserDatabase>('users');
+    box.putAt(user!.key as int, updatedUser);
+
+    setState(() {
+      user = updatedUser;
+    });
+    Navigator.pop(context);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(TextConstants.editProfile)));
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _phoneNumberController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (user == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     return Scaffold(
-      backgroundColor: Color(0xFFF2F2F2), // Background color for entire screen
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        title: Text(
-          "Profile",
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black),
+        title: const Text(
+          TextConstants.profile,
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
         ),
+        automaticallyImplyLeading: false,
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            SizedBox(height: 24),
-            Center(
-              child: Column(
-                children: [
-                  CircleAvatar(
-                    radius: 50,
-                    backgroundImage: AssetImage('asset/image/Bg image (1).png'),
-                  ),
-                  SizedBox(height: 12),
-                  Text(
-                    "Susan Roy",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-                  ),
-                  Text(
-                    "susanroy2002@email.com",
-                    style: TextStyle(color: Colors.grey[600]),
-                  ),
-                ],
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              const SizedBox(height: 10),
+              CircleAvatar(
+                radius: 80,
+                backgroundImage: AssetImage(ImageConstants.profilePhoto),
               ),
-            ),
-            SizedBox(height: 32),
-            ListTile(
-              leading: Icon(Icons.edit),
-              title: Text("Edit Profile"),
-              trailing: Icon(Icons.arrow_forward_ios, size: 16),
-              onTap: () {
-              },
-            ),
-            Divider(),
-            ListTile(
-              leading: Icon(Icons.logout),
-              title: Text("Logout"),
-              trailing: Icon(Icons.arrow_forward_ios, size: 16),
-              onTap: () {
-              },
-            ),
-          ],
+              const SizedBox(height: 16),
+              Text(
+                user!.fullName,
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 10),
+              Text(user!.email, style: const TextStyle(fontSize: 18)),
+              const SizedBox(height: 10),
+              Text('+91 ${user!.phoneNumber}', style: const TextStyle(fontSize: 18)),
+              const SizedBox(height: 20),
+              ListTile(
+                leading: const Icon(Icons.edit),
+                title: const Text("Edit Profile"),
+                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                onTap: showEditDialog,
+              ),
+              const Divider(),
+              ListTile(
+                leading: const Icon(Icons.logout_rounded),
+                title: const Text("Logout"),
+                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                onTap: () async {
+                  final confirm = await showDialog<bool>(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text(TextConstants.confirmLogOut),
+                      content: const Text(TextConstants.confirmLogOutMsg),
+                      actions: [
+                        Button(
+                          title: "Cancel",
+                          onPressed: () => Navigator.pop(context, false),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, true),
+                          child: const Text("Log out", style: TextStyle(color: Colors.red)),
+                        ),
+                      ],
+                    ),
+                  );
+                  if (confirm ?? false) {
+                    await signOut(context);
+                  }
+                },
+              ),
+              const Divider(),
+            ],
+          ),
         ),
       ),
     );

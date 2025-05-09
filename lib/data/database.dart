@@ -21,7 +21,10 @@ class Database extends HiveObject {
   String? description;
 
   @HiveField(5)
-  Uint8List? imagePath; 
+  Uint8List? imagePath;
+
+  @HiveField(6)
+  bool? isFavorite;
 
   Database({
     required this.medicineName,
@@ -30,5 +33,6 @@ class Database extends HiveObject {
     required this.price,
     this.description,
     this.imagePath,
+    this.isFavorite = false
   });
 }

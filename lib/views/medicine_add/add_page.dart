@@ -1,9 +1,9 @@
 import 'dart:typed_data';
 import 'package:image_picker/image_picker.dart';
-import 'package:hive/hive.dart';
 import 'package:flutter/material.dart';
 import 'package:pill_vault/data/database.dart';
-import 'package:pill_vault/views/bottom_navigations/bottom_navigations.dart';
+import 'package:pill_vault/services/medicine_services/medicine_services.dart';
+import 'package:pill_vault/views/medicine_add/widgets/confirm_delete_dialog.dart';
 import 'package:pill_vault/widgets/button.dart';
 import 'package:pill_vault/widgets/text_field.dart';
 import 'package:pill_vault/constants/text_constants.dart';
@@ -88,37 +88,11 @@ class _AddPageState extends State<AddPage> {
       isFavorite: _isFavorite
     );
 
-    final box = await Hive.openBox<Database>('mybox');
-
-    if (widget.medicine == null) {
-      await box.add(newMedicine);
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text(TextConstants.addMsg)));
-    } else {
-      await box.putAt(widget.index!, newMedicine);
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text(TextConstants.updMsg)));
-    }
-
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => BottomNavigations()),
-    );
-  }
-
-  Future<void> _deleteMedidcine() async {
-    final box = await Hive.openBox<Database>('mybox');
-    await box.deleteAt(widget.index!);
-
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(TextConstants.delMsg)));
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => BottomNavigations()),
-    );
+    await MedicineServices.addOrUpdateMedicine(
+      context: context,
+      medicine: newMedicine,
+      isEdit: widget.medicine != null,
+      index: widget.index);
   }
 
   @override
@@ -147,39 +121,16 @@ class _AddPageState extends State<AddPage> {
                       },
                     ),
                     IconButton(
-                      icon: const Icon(Icons.delete, color: Colors.red),
-                      onPressed: () async {
-                        // Confirm delete
-                        final confirm = await showDialog<bool>(
-                          context: context,
-                          builder:
-                              (context) => AlertDialog(
-                                title: const Text(TextConstants.confirmDel),
-                                content: const Text(TextConstants.confirmMsg),
-                                actions: [
-                                  Button(
-                                    title: "Cancel",
-                                    onPressed:
-                                        () => Navigator.pop(context, false),
-                                  ),
-                                TextButton(
-                                    onPressed:
-                                        () => Navigator.pop(context, true),
-                                    child: const Text(
-                                      "Delete",
-                                      style: TextStyle(color: Colors.red),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                        );
-                        if (confirm ?? false) {
-                          await _deleteMedidcine();
-                        }
-                      },
-                    ),
-                  ]
-                  : null,
+                    icon: const Icon(Icons.delete, color: Colors.red),
+                    onPressed: () {
+                      ConfirmDeleteDialog.show(
+                        context: context,
+                        index: widget.index!,
+                      );
+                    },
+                  ),
+                ]
+              : null,
         ),
         body: Padding(
           padding: const EdgeInsets.all(12.0),

@@ -27,5 +27,16 @@ class MedicineServices {
   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavigations()));
   }
 
+  static Future<void> deleteMedicine({
+    required BuildContext context,
+    required int index,
+  })async{
+    final box = await Hive.openBox<Database>('mybox');
+    await box.deleteAt(index);
 
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(TextConstants.delMsg))
+    );
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavigations()));
+  }
 }

@@ -14,7 +14,7 @@ class ChartPage extends StatelessWidget {
     List<BarChartGroupData> barGroups = [];
 
     for (int i = 0; i < medicines.length; i++) {
-      final price = medicines[i].price ?? 0.0;
+      final price = medicines[i].price;
       barGroups.add(
         BarChartGroupData(
           x: i,

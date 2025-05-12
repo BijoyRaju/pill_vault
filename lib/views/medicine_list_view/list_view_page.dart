@@ -8,6 +8,7 @@ import 'package:pill_vault/views/home/widgets/medicine_fav_card.dart';
 import 'package:hive/hive.dart';
 
 class ListViewPage extends StatefulWidget {
+  
   const ListViewPage({super.key});
 
   @override
@@ -41,7 +42,8 @@ class _ListViewPageState extends State<ListViewPage> {
       _filtered =
           _medicines.where((med) {
             return med.medicineName.toLowerCase().contains(query) ||
-                med.chemicalName.toLowerCase().contains(query);
+                med.chemicalName.toLowerCase().contains(query) ||
+                med.dosage.toString().contains(query);
           }).toList();
     });
   }

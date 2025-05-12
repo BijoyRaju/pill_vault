@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:pill_vault/constants/image_constants.dart';
 import 'package:pill_vault/constants/text_constants.dart';
+import 'package:pill_vault/services/medicine_services/user_services.dart';
 import 'package:pill_vault/views/login/login_page.dart';
 import 'package:pill_vault/views/profile/widgets/edit_show_dialog.dart';
 import 'package:pill_vault/widgets/button.dart';
@@ -31,21 +31,16 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _loadUser() async {
-    final prefs = await SharedPreferences.getInstance();
-    final key = prefs.getInt('loggedInUserKey');
-    if (key != null) {
-      final box = Hive.box<UserDatabase>('users');
-      final loadedUser = box.get(key);
-      if (loadedUser != null) {
+    final loadUser = await UserServices.getLoggedInUser();
+    if (loadUser != null) {
         setState(() {
-          user = loadedUser;
-          _nameController.text = loadedUser.fullName;
-          _emailController.text = loadedUser.email;
-          _phoneNumberController.text = loadedUser.phoneNumber;
+          user = loadUser;
+          _nameController.text = loadUser.fullName;
+          _emailController.text = loadUser.email;
+          _phoneNumberController.text = loadUser.phoneNumber;
         });
       }
     }
-  }
 
   Future<void> signOut(BuildContext ctx) async {
     final _sharedPrefs = await SharedPreferences.getInstance();
@@ -72,19 +67,17 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  void onUpdate(){
-    final updatedUser = user!..fullName = _nameController.text
-                            ..email = _emailController.text
-                            ..phoneNumber = _phoneNumberController.text;
-    
-    final box = Hive.box<UserDatabase>('users');
-    box.putAt(user!.key as int, updatedUser);
+  void onUpdate()async{
+    if(user == null) return;
+    await UserServices.updateUser(
+      user: user!,
+      name: _nameController.text,
+      email: _emailController.text,
+      phone: _phoneNumberController.text);
 
-    setState(() {
-      user = updatedUser;
-    });
-    Navigator.pop(context);
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(TextConstants.editProfile)));
+      setState(() {});
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(TextConstants.editProfileMsg)));
   }
 
   @override

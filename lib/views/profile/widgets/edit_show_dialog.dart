@@ -3,13 +3,13 @@ import 'package:pill_vault/widgets/button.dart';
 import 'package:pill_vault/widgets/text_field.dart';
 
 class EditShowDialog extends StatelessWidget {
-  final nameController;
-  final emailController;
-  final phoneController;
-  VoidCallback onUpdate;
-  VoidCallback onCancel;
+  final TextEditingController nameController;
+  final TextEditingController emailController;
+  final TextEditingController phoneController;
+  final VoidCallback onUpdate;
+  final VoidCallback onCancel;
 
-   EditShowDialog({
+  const EditShowDialog({
     super.key,
     required this.onUpdate,
     required this.onCancel,
@@ -21,7 +21,7 @@ class EditShowDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      content: Container(
+      content: SizedBox(
         height: 300,
         width: 350,
         child: Center(

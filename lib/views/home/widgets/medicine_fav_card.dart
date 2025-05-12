@@ -6,9 +6,9 @@ class MedicineFavCard extends StatelessWidget {
   final String medicineName;
   final String chemicalName;
   final String description;
-  VoidCallback? onTap;
+  final VoidCallback? onTap;
 
-  MedicineFavCard({
+  const MedicineFavCard({
     super.key,
     required this.backgroundImage,
     required this.avatarImage,

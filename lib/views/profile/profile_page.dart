@@ -105,59 +105,61 @@ class _ProfilePageState extends State<ProfilePage> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              const SizedBox(height: 10),
-              CircleAvatar(
-                radius: 80,
-                backgroundImage: AssetImage(ImageConstants.profilePhoto),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                user!.fullName,
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 10),
-              Text(user!.email, style: const TextStyle(fontSize: 18)),
-              const SizedBox(height: 10),
-              Text('+91 ${user!.phoneNumber}', style: const TextStyle(fontSize: 18)),
-              const SizedBox(height: 20),
-              ListTile(
-                leading: const Icon(Icons.edit),
-                title: const Text("Edit Profile"),
-                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                onTap: showEditDialog,
-              ),
-              const Divider(),
-              ListTile(
-                leading: const Icon(Icons.logout_rounded),
-                title: const Text("Logout"),
-                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                onTap: () async {
-                  final confirm = await showDialog<bool>(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: const Text(TextConstants.confirmLogOut),
-                      content: const Text(TextConstants.confirmLogOutMsg),
-                      actions: [
-                        Button(
-                          title: "Cancel",
-                          onPressed: () => Navigator.pop(context, false),
-                        ),
-                        TextButton(
-                          onPressed: () => Navigator.pop(context, true),
-                          child: const Text("Log out", style: TextStyle(color: Colors.red)),
-                        ),
-                      ],
-                    ),
-                  );
-                  if (confirm ?? false) {
-                    await signOut(context);
-                  }
-                },
-              ),
-              const Divider(),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(height: 10),
+                CircleAvatar(
+                  radius: 80,
+                  backgroundImage: AssetImage(ImageConstants.profilePhoto),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  user!.fullName,
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 10),
+                Text(user!.email, style: const TextStyle(fontSize: 18)),
+                const SizedBox(height: 10),
+                Text('+91 ${user!.phoneNumber}', style: const TextStyle(fontSize: 18)),
+                const SizedBox(height: 20),
+                ListTile(
+                  leading: const Icon(Icons.edit),
+                  title: const Text("Edit Profile"),
+                  trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                  onTap: showEditDialog,
+                ),
+                const Divider(),
+                ListTile(
+                  leading: const Icon(Icons.logout_rounded),
+                  title: const Text("Logout"),
+                  trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                  onTap: () async {
+                    final confirm = await showDialog<bool>(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text(TextConstants.confirmLogOut),
+                        content: const Text(TextConstants.confirmLogOutMsg),
+                        actions: [
+                          Button(
+                            title: "Cancel",
+                            onPressed: () => Navigator.pop(context, false),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, true),
+                            child: const Text("Log out", style: TextStyle(color: Colors.red)),
+                          ),
+                        ],
+                      ),
+                    );
+                    if (confirm ?? false) {
+                      await signOut(context);
+                    }
+                  },
+                ),
+                const Divider(),
+              ],
+            ),
           ),
         ),
       ),

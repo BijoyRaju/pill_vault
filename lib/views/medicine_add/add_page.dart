@@ -67,7 +67,6 @@ class _AddPageState extends State<AddPage> {
   }
 
   Future<void> _submitMedicine() async {
-
     if (medNameController.text.isEmpty ||
         chemNameController.text.isEmpty ||
         dosageController.text.isEmpty ||

@@ -1,5 +1,4 @@
- Pill Vault
-
+Pill Vault
 Pill Vault is a Flutter-based mobile application designed to help users manage and store their medicines locally. The app provides a clean UI and essential features like medicine tracking, search, analytics, and user profile management — all stored securely using local storage (Hive) and login state persistence via SharedPreferences.
 
 🧩 Features Overview
@@ -99,5 +98,5 @@ Stored in Hive box (medicines)
 - Hive Flutter Adapter: Required for Flutter apps using Hive
 - Shared Preferences: Persistent local key-value storage
 - Flutter Material: For building UI components
-Charts Package 
+- Charts Package 
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pill_vault/constants/image_constants.dart';
 import 'package:pill_vault/constants/text_constants.dart';
-import 'package:pill_vault/services/medicine_services/user_services.dart';
+import 'package:pill_vault/services/user_services/user_services.dart';
 import 'package:pill_vault/views/login/login_page.dart';
 import 'package:pill_vault/views/profile/widgets/edit_show_dialog.dart';
 import 'package:pill_vault/widgets/button.dart';
